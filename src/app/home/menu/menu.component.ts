@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/user/auth.service';
 
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'pm-menu',
   templateUrl: './menu.component.html'
 })

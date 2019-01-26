@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 import * as userActions from './state/user.actions';
-import * as userState from './state/user.reducer';
+import * as userState from './state';
+import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   pageTitle = 'Log In';
   errorMessage: string;
 
   maskUserName: boolean;
+  componentActive = true;
 
 
   constructor(
@@ -26,10 +28,16 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //TODO: Unsubscribe
-    this.store.pipe(select(userState.getMaskUserName)).subscribe(
+    this.store.pipe(
+      select(userState.getMaskUserName),
+      takeWhile(() => this.componentActive)
+    ).subscribe(
       maskUserName => this.maskUserName = maskUserName
     );
+  }
+
+  ngOnDestroy() {
+    this.componentActive = false;
   }
 
   canel(): void {
@@ -52,7 +60,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/products']);
       }
     } else {
-      this.errorMessage = 'Please enter a user name and password'
+      this.errorMessage = 'Please enter a user name and password';
     }
   }
 }

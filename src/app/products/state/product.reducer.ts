@@ -1,14 +1,7 @@
 import { Product } from '../product';
-import * as fromRoot from '../../state/app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ProductActions, ProductActionTypes } from './product.actions';
-import { Statement } from '@angular/compiler';
+import { ProductActionTypes, ProductActions } from './product.actions';
 
-// Putting this here instead of in the APP.STATE.TS allows the lazy loading feature to function correctly.
-export interface State extends fromRoot.State {
-    products: ProductState;
-}
-
+// State for this feature (Product)
 export interface ProductState {
     showProductCode: boolean;
     // Storing the currentProduct ID is better practice! at least that's what I got from the video.
@@ -19,8 +12,6 @@ export interface ProductState {
     error: string;
 }
 
-
-
 const initialState: ProductState = {
     showProductCode: true,
     // CurrentProductID is part of the example from the explanation above!
@@ -29,50 +20,6 @@ const initialState: ProductState = {
     products: [],
     error: ''
 };
-
-const getProductFeatureState = createFeatureSelector<ProductState>('products');
-
-export const getCurrentProductId = createSelector(
-    getProductFeatureState,
-    state => state.currentProductId
-);
-
-export const getCurrentProduct = createSelector(
-    getProductFeatureState,
-    getCurrentProductId,
-    (state, currentProductId) => {
-        if (currentProductId === 0) {
-            return {
-                id: 0,
-                productName: '',
-                productCode: 'New',
-                description: '',
-                starRating: 0
-            };
-        } else {
-            return currentProductId ? state.products.find(p => p.id === currentProductId) : null;
-        }
-    }
-);
-
-export const getProducts = createSelector(
-    getProductFeatureState,
-    state => state.products
-);
-
-export const getError = createSelector(
-    getProductFeatureState,
-    state => state.error
-);
-
-
-export const getShowProductCode = createSelector(
-    // The selector thats required to get the state is first
-    getProductFeatureState,
-    // Then returns the current request state
-    state => state.showProductCode
-);
-
 
 export function reducer(state = initialState, action: ProductActions): ProductState {
     switch (action.type) {

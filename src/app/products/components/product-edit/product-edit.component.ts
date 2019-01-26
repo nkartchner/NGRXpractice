@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { Store, select } from '@ngrx/store';
-import * as productStore from '../state/product.reducer';
-import * as productActions from '../state/product.actions';
-
-import { Product } from '../product';
-import { ProductService } from '../product.service';
+import { Product } from '../../product';
 import { GenericValidator } from 'src/app/shared/generic-validator';
 import { NumberValidators } from 'src/app/shared/number-validator';
-import { takeWhile } from 'rxjs/operators';
 
 
 @Component({
@@ -18,22 +20,28 @@ import { takeWhile } from 'rxjs/operators';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.scss']
 })
-export class ProductEditComponent implements OnInit, OnDestroy {
+
+export class ProductEditComponent implements OnInit, OnChanges {
   pageTitle = 'Product Edit';
-  errorMessage = '';
-  productForm: FormGroup;
+  @Input() errorMessage: string;
+  @Input() selectedProduct: Product;
+
+  @Output() create = new EventEmitter<Product>();
+  @Output() update = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
+  @Output() cancel = new EventEmitter<void>();
 
   product: Product | null;
+
   // Use with the generic validation message class
+  productForm: FormGroup;
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
-  subscribed = true;
 
-  constructor(
-    private fb: FormBuilder,
-    private store: Store<productStore.State>,
-  ) {
+  constructor(private fb: FormBuilder) {
+    // Defines all of the validation messages for the form.
+    // These could instead be retrieved from a file or database.
     this.validationMessages = {
       productName: {
         required: 'Product name is required',
@@ -69,14 +77,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       description: ''
     });
 
-    // watch for value changes on the current product
-    this.store.pipe(
-      select(productStore.getCurrentProduct),
-      takeWhile(() => this.subscribed)
-    ).subscribe(
-      currentProduct => this.displayProduct(currentProduct)
-    );
-
     // Listening for form validations
     this.productForm.valueChanges.subscribe(
       value => this.displayMessage = this.genericValidator.processMessages(this.productForm)
@@ -84,8 +84,12 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-    this.subscribed = false;
+  ngOnChanges(changes: SimpleChanges): void {
+    // patch form with value from the store
+    if (changes.selectedProduct) {
+      const product: any = changes.selectedProduct.currentValue as Product;
+      this.displayProduct(product);
+    }
   }
 
   // Also validate on blur
@@ -127,11 +131,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   deleteProduct(): void {
     if (this.product && this.product.id) {
       if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.store.dispatch(new productActions.DeleteProduct(this.product.id));
+        this.delete.emit(this.product);
       }
     } else {
       // No need to delete, it was never saved
-      this.store.dispatch(new productActions.ClearCurrentProduct());
+      this.cancel.emit();
     }
   }
 
@@ -144,9 +148,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         const p = { ...this.product, ...this.productForm.value };
 
         if (p.id === 0) {
-          this.store.dispatch(new productActions.CreateProduct(p));
+          this.create.emit(p);
         } else {
-          this.store.dispatch(new productActions.UpdateProduct(p));
+          this.update.emit(p);
         }
       } else {
         this.errorMessage = 'Please correct the validation errors!';

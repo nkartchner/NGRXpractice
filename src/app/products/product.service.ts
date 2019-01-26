@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
-import { Product } from './product'
+import { Product } from './product';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class ProductService {
       .pipe(
         tap(data => console.log('createProduct' + JSON.stringify(data))),
         catchError(this.handleError)
-      )
+      );
   }
 
   deleteProduct(id: number): Observable<{}> {
@@ -57,11 +57,11 @@ export class ProductService {
   }
 
   private handleError(err) {
-    //in a real world app, we may send the server to some remote logging infrastructure
+    // in a real world app, we may send the server to some remote logging infrastructure
     // instead of just logging it to the console
     let errorMessage: string;
     if (err.error instanceof ErrorEvent) {
-      //a client-side or network error occured. Handle it accordingly.
+      // a client-side or network error occured. Handle it accordingly.
       errorMessage = `An error occured ${err.error.message}`;
     } else {
       // The backend returned an unsuccessful response code.

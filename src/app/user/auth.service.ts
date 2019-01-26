@@ -15,7 +15,7 @@ export class AuthService {
   }
 
   login(userNameLstring, password: string): void {
-    //Code here would log into a back end service
+    // Code here would log into a back end service
     // and return user information
     // this is just hard-coded here.
     this.currentUser = {

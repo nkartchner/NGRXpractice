@@ -9,4 +9,4 @@ export class MaskUserName implements Action {
     constructor(public payload: boolean) { }
 }
 
-export type UserActions = MaskUserName
+export type UserActions = MaskUserName;

@@ -3,8 +3,7 @@
   <div class="card-header">
     {{pageTitle}}
   </div>
-<!-- This *ngIf="products$ | async as products" makes it so nothing on the page loads until the products$ has a value -->
-  <div class="card-body" *ngIf="products$ | async as products">
+  <div class="card-body" *ngIf="products">
     <div class="list-group">
       <button class="list-group-item list-group-item-action rounded-0" *ngFor="let product of products" [ngClass]="{'active': product?.id === selectedProduct?.id}"
         (click)="productSelected(product)">{{ product.productName }}
@@ -31,6 +30,6 @@
     </div>
   </div>
 </div>
-<div *ngIf="errorMessage$ | async as errorMessage" class="alert alert-danger">
+<div *ngIf="errorMessage" class="alert alert-danger">
   Error: {{ errorMessage }}
 </div>
