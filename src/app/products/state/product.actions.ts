@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store'
+import { Action } from '@ngrx/store';
 import { Product } from '../product';
 import { __importDefault } from 'tslib';
 import { ImplicitReceiver } from '@angular/compiler';
@@ -11,18 +11,18 @@ export enum ProductActionTypes {
     SetCurrentProduct = '[Product] Set Current Product',
     ClearCurrentProduct = '[Product] Clear Current Product',
     InitializeCurrentProduct = '[Product] Initialize Current Product',
-    Create = '[Product] Create Product',
-    CreateSuccess = '[Product] Create Product Success',
-    CreateFail = '[Product] Create Product Fail',
+    CreateProduct = '[Product] Create Product',
+    CreateProductSuccess = '[Product] Create Product Success',
+    CreateProductFail = '[Product] Create Product Fail',
     Load = '[Product] Load Product',
     LoadFail = '[Product] Load Failed',
     LoadSuccess = '[Product] Load Success',
-    Update = '[Product] Update Product',
-    UpdateSuccess = '[Product] Update Product Success',
-    UpdateFail = '[Product] Update Fail',
-    Delete = '[Product] Delete Product',
-    DeleteSuccess = '[Product] Delete Product Success',
-    DeleteFail = '[Product] Delete Product Fail'
+    UpdateProduct = '[Product] Update Product',
+    UpdateProductSuccess = '[Product] Update Product Success',
+    UpdateProductFail = '[Product] Update Fail',
+    DeleteProduct = '[Product] Delete Product',
+    DeleteProductSuccess = '[Product] Delete Product Success',
+    DeleteProductFail = '[Product] Delete Product Fail'
 
 }
 
@@ -62,48 +62,49 @@ export class LoadFail implements Action {
 }
 
 ////////////////////////////////////////////////////////// CREATE //////////////////////////////////////////////////////////
-export class Create implements Action {
-    readonly type = ProductActionTypes.Create;
-}
-
-export class CreateSuccess implements Action {
-    readonly type = ProductActionTypes.CreateSuccess;
+export class CreateProduct implements Action {
+    readonly type = ProductActionTypes.CreateProduct;
     constructor(public payload: Product) { }
 }
 
-export class CreateFail implements Action {
-    readonly type = ProductActionTypes.CreateFail;
+export class CreateProductSuccess implements Action {
+    readonly type = ProductActionTypes.CreateProductSuccess;
+    constructor(public payload: Product) { }
+}
+
+export class CreateProductFail implements Action {
+    readonly type = ProductActionTypes.CreateProductFail;
     constructor(public payload: string) { }
 }
 
 ////////////////////////////////////////////////////////// UPDATE //////////////////////////////////////////////////////////
-export class Update implements Action {
-    readonly type = ProductActionTypes.Update;
+export class UpdateProduct implements Action {
+    readonly type = ProductActionTypes.UpdateProduct;
     constructor(public payload: Product) { }
 }
 
-export class UpdateSuccess implements Action {
-    readonly type = ProductActionTypes.UpdateSuccess;
+export class UpdateProductSuccess implements Action {
+    readonly type = ProductActionTypes.UpdateProductSuccess;
     constructor(public payload: Product) { }
 }
 
-export class UpdateFail implements Action {
-    readonly type = ProductActionTypes.UpdateFail;
+export class UpdateProductFail implements Action {
+    readonly type = ProductActionTypes.UpdateProductFail;
     constructor(public payload: string) { }
 }
 ////////////////////////////////////////////////////////// DELETE //////////////////////////////////////////////////////////
-export class Delete implements Action {
-    readonly type = ProductActionTypes.Delete;
-    constructor(public payload: Product) { }
+export class DeleteProduct implements Action {
+    readonly type = ProductActionTypes.DeleteProduct;
+    constructor(public payload: number) { }
 }
 
-export class DeleteSuccess implements Action {
-    readonly type = ProductActionTypes.DeleteSuccess;
-    constructor(public payload: string) { }
+export class DeleteProductSuccess implements Action {
+    readonly type = ProductActionTypes.DeleteProductSuccess;
+    constructor(public payload: number) { }
 }
 
-export class DeleteFail implements Action {
-    readonly type = ProductActionTypes.DeleteFail;
+export class DeleteProductFail implements Action {
+    readonly type = ProductActionTypes.DeleteProductFail;
     constructor(public payload: string) { }
 }
 
@@ -116,12 +117,12 @@ export type ProductActions = ToggleProduct
     | Load
     | LoadSuccess
     | LoadFail
-    | Create
-    | CreateSuccess
-    | CreateFail
-    | Update
-    | UpdateSuccess
-    | UpdateFail
-    | Delete
-    | DeleteSuccess
-    | DeleteFail
+    | CreateProduct
+    | CreateProductSuccess
+    | CreateProductFail
+    | UpdateProduct
+    | UpdateProductSuccess
+    | UpdateProductFail
+    | DeleteProduct
+    | DeleteProductSuccess
+    | DeleteProductFail;
